@@ -55,9 +55,8 @@ namespace Infraestructura.Datos.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("gasto")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<double>("gasto")
+                        .HasColumnType("double");
 
                     b.Property<string>("imagen")
                         .HasColumnType("longtext");
@@ -87,8 +86,8 @@ namespace Infraestructura.Datos.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("estado")
-                        .HasColumnType("longtext");
+                    b.Property<bool>("estado")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("nombre")
                         .HasColumnType("longtext");
