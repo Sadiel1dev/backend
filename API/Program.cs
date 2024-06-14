@@ -1,5 +1,6 @@
 
 
+using Core.Interfaces;
 using Infraestructura.Datos;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,9 +15,33 @@ builder.Services.AddDbContext<Contexto>(options => options.UseMySql(conexion,Ser
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+//annadir servicio para utilizar interfaz
+builder.Services.AddScoped<ILugarRepositorio,LugarRepositorio>();
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//migraciones automaticas
+using(var scope=app.Services.CreateScope())
+{
+   var services =scope.ServiceProvider;
+   var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+
+   try
+   {
+    var context =services.GetRequiredService<Contexto>();
+    await context.Database.MigrateAsync();
+//alimentar base de datos
+
+    await Seed.SeedAsync(context,loggerFactory);
+
+   }
+   catch (System.Exception ex)
+   {
+    
+    var logger = loggerFactory.CreateLogger<Program>();
+    logger.LogError(ex,"Migracion fallida");
+   }
+}
+// Configure the HTTP request pipeline. 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
