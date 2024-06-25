@@ -1,5 +1,6 @@
 
 
+using API.Helpers;
 using Core.Interfaces;
 using Infraestructura.Datos;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 //annadir servicio para utilizar interfaz
 builder.Services.AddScoped<ILugarRepositorio,LugarRepositorio>();
+builder.Services.AddScoped(typeof(IRepositorio<>),typeof(Repositorio<>));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 var app = builder.Build();
 
 //migraciones automaticas
@@ -49,6 +52,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseRouting();
 
